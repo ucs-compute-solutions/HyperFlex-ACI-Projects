@@ -16,7 +16,7 @@
 
 ## Overview 
 
-This repository contains the Terraform (TF) plans for deploying the ACI portion of the design for a Cisco HyperFlex (HX) Edge with ACI Remote Leaf (RL) solution. For more details on the solution, see whitepaper available at: <link_will_be_updated_on_publish>. 
+This repository contains the Terraform (TF) plans for deploying the ACI portion of the design for the Cisco HyperFlex (HX) Edge with ACI Remote Leaf (RL) solution. For more details on the solution, see whitepaper available at: https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/UCS_CVDs/hx_edge_4_5_aci_terraform.html#CiscoIntersightServiceforTerraform>. 
 
 The Terraform plans were used to provision the following aspects of the solution:
 
