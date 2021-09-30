@@ -47,40 +47,8 @@ The software versions of the components validated in this solution are:
  *  Review the [Cisco ACI Remote Leaf Architecture white paper](https://www.cisco.com/c/en/us/solutions/collateral/data-center-virtualization/application-centric-infrastructure/white-paper-c11-740861.html) for an in-depth understanding of the remote leaf design 
  *  The main Cisco ACI fabric site that the remote site will be mapped to, is assumed to be up and operational with connectivity to the Inter-Pod network (IPN) that will interconnect the sites. Note: The ACI fabric design and the Inter-Pod network design is outside the scope of this white paper and assumed to be in place before the remote leaf site is brought up. 
  *  Management Workstation for executing Terraform scripts. It should be Linux-based workstation with tools such as GIT and an IDE (for e.g. VSCode) deployed to clone this repo, and to edit and execute the Terraform plans.
- *  Physically deploy the relevant components and establish connectivity between the components. Also perform any initial device configuration that is needed. 
-    
-    - Inter-Pod Network:
-       - IPN connectivity must be in place between the remote leaf site and the main ACI fabric site(s) that it is part of 
-       - IP connectivity established between remote leaf site and main ACI fabric site(s)
-       - Routing, DHCP and other features must be in place and operational in the IPN to enable dynamic discovery and provisioning of remote leaf switches, to establish VXLAN tunnels for forwarding and facilitate endpoint address learning between sites
-       - For additional requirements and other information, see the Configuration Guide for the Cisco APIC release used in validating the scripts/solution: [Cisco APIC Layer 3 Networking Configuration Guide, Release 4.2(x)](https://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/4-x/L3-configuration/Cisco-APIC-Layer-3-Networking-Configuration-Guide-42x/Cisco-APIC-Layer-3-Networking-Configuration-Guide-42x_chapter_011011.html?referring_site=RE&pos=3&page=https://www.cisco.com/c/en/us/support/docs/cloud-systems-management/application-policy-infrastructure-controller-apic/213619-aci-remote-leaf-discovery-and-configurat.html#id_59133)
-       - Note: IPN design and remote site design is outside the scope of this white paper and is assumed to be in place.
-    
-    - Remote Leaf Switches: 
-       - Deploy Remote leaf switches with the appropriate ACI software
-       - Establish physical connectivity to the ACI fabric through the Inter-Pod network and to the management network (In-Band or Out-of-Band or both)
-       - Follow the steps outlined in the solution white paper to bring up the remote leaf site. The high level steps for this are:
-          - Collect the serial number information for the remote leaf switches and identify IP addresses to use for management (In-Band or Out-of-Band or both)   
-          - If the IPN connectivity is working correctly, the remote leaf switches should now be discoverable from the APIC GUI 
-          - Add the remote leaf switches to the ACI fabric and Use the `Add Remote Leaf` Quick Start Wizard for the remaining configuration. 
-          - Note: When a switch is added to the fabric, Cisco APIC will provision the switch for management connectivity and any VXLAN overlay 
-            configuration necessary for enabling Layer 2 and Layer 3 forwarding across the fabric, including between sites. 
-       - The Terraform plans in this repo can now be executed but ideally, complete the remaining items in this section also before doing that.  
-     
-    - Cisco HyperFlex Edge Servers:
-       - Deploy Cisco HyperFlex Edge servers with CIMC (out-of-band) connectivity and appropriate software and firmware
-       - Establish physical connectivity from the servers to the Remote leaf switches. 
-       - Each server is dual-homed to a pair of remote leaf switches in this design using 25GbE connectivity. 
-       - Verify visually that the links are up. Once the ACI configuration is deployed using the TF plans, the access layer connectivity will be up.
-       
+ *  Physically deploy the relevant components and establish connectivity between the components. Also perform any initial device configuration that is needed. Verify that the Remote Leaf site is up and operation with connectivity to the main ACI site across the Inter-Pod network. The HyperFlex Edge servers should also be physically connected to the leaf switches with the necessary configuration to bring the link up on the ACI Remote leaf switches.  
 
- *  Reachabilty to Cisco Intersight from the ACI Remote Leaf Site must be in place to install and bring up the HyperFlex Edge cluster. 
-    
-    - This may require specific Firewall TCP and UDP ports to be opened up - see Intersight documentation for specifics
-    - Cisco Intersight must also be able to reach:
-      - CIMC IP Address of the HyperFlex Edge Servers
-      - In-band (ESXi) Management IP Address of the HX Edge node - this will be through the Cisco ACI fabric
-    - From CIMC, use device connector to add HyperFlex Edge servers to Cisco Intersight 
    
 ## Terraform Scripts
 
@@ -103,8 +71,8 @@ The Terraform plans in the solution directory: `HX-Edge-ACI-RemoteLeaf` director
    - Deploys Application Tenant and EPGs for App. VMs  using ACI VMM integration to dynamically provision the virtual networking for use by App. VMs
 
 Note: 
-- Items [3] - [7] are optional
-- Items [1] and [2] should be used to provision the fabric before Cisco Intersight can install and bring up the HX Edge cluster
+- TF Plans [1] and [2] must be complete before Cisco Intersight begins the installation of the HX Edge cluster
+- TF Plans [3] through [7] are optional
 
 ## Terraform Version
 
